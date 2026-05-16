@@ -157,3 +157,116 @@ for (let i = 0; i < navigationLinks.length; i++) {
 
   });
 }
+
+
+
+// skills variables
+const skillSearchInput = document.querySelector("#skill-search");
+const skillItems = document.querySelectorAll(".new-skill-item");
+
+// skill search functionality
+if (skillSearchInput) {
+  skillSearchInput.addEventListener("input", function () {
+    const searchValue = this.value.toLowerCase();
+
+    for (let i = 0; i < skillItems.length; i++) {
+      const skillName = skillItems[i].dataset.skill.toLowerCase();
+      if (skillName.includes(searchValue)) {
+        skillItems[i].style.display = "block";
+      } else {
+        skillItems[i].style.display = "none";
+      }
+    }
+  });
+}
+
+// skill modal variables
+const skillModalContainer = document.querySelector("[data-skill-modal-container]");
+const skillModalCloseBtn = document.querySelector("[data-skill-modal-close-btn]");
+const skillOverlay = document.querySelector("[data-skill-overlay]");
+const skillModalTitle = document.querySelector("#skill-modal-title");
+const skillModalIcon = document.querySelector("#skill-modal-icon");
+const skillModalText = document.querySelector("#skill-modal-text");
+const skillPortfolioBtn = document.querySelector("#skill-portfolio-btn");
+
+// skill modal toggle function
+const skillModalFunc = function () {
+  skillModalContainer.classList.toggle("active");
+  skillOverlay.classList.toggle("active");
+}
+
+// add click event to all skill items
+for (let i = 0; i < skillItems.length; i++) {
+  const skillBtn = skillItems[i].querySelector(".skill-btn");
+  if (skillBtn) {
+    skillBtn.addEventListener("click", function () {
+      const parentLi = this.parentElement;
+      const title = parentLi.dataset.skillTitle;
+      const iconName = parentLi.dataset.skillIcon;
+      const desc = parentLi.dataset.skillDesc;
+
+      skillModalTitle.innerHTML = title;
+      skillModalIcon.innerHTML = `<ion-icon name="${iconName}"></ion-icon>`;
+      skillModalText.innerHTML = desc;
+
+      skillModalFunc();
+    });
+  }
+}
+
+// add click event to modal close button
+if (skillModalCloseBtn) skillModalCloseBtn.addEventListener("click", skillModalFunc);
+if (skillOverlay) skillOverlay.addEventListener("click", skillModalFunc);
+
+// skill portfolio button navigation
+if (skillPortfolioBtn) {
+  skillPortfolioBtn.addEventListener("click", function () {
+    // close the modal
+    skillModalFunc();
+    
+    // trigger portfolio nav click
+    for (let i = 0; i < navigationLinks.length; i++) {
+      if (navigationLinks[i].innerHTML.toLowerCase() === "portfolio") {
+        navigationLinks[i].click();
+        break;
+      }
+    }
+  });
+}
+
+// lightbox variables
+const lightboxModal = document.querySelector("[data-lightbox-modal]");
+const lightboxImg = document.querySelector("[data-lightbox-img]");
+const lightboxCloseBtn = document.querySelector("[data-lightbox-close-btn]");
+const lightboxOverlay = document.querySelector("[data-lightbox-overlay]");
+const projectItemIconBoxes = document.querySelectorAll(".project-item-icon-box");
+
+// lightbox toggle function
+const lightboxFunc = function () {
+  lightboxModal.classList.toggle("active");
+}
+
+// add click event to all project icon boxes
+for (let i = 0; i < projectItemIconBoxes.length; i++) {
+  projectItemIconBoxes[i].addEventListener("click", function () {
+    const projectImg = this.closest(".project-img") || this.closest(".project-card").querySelector(".project-img");
+    const imgSrc = projectImg.querySelector("img").src;
+    const imgAlt = projectImg.querySelector("img").alt;
+
+    lightboxImg.src = imgSrc;
+    lightboxImg.alt = imgAlt;
+
+    lightboxFunc();
+  });
+}
+
+// add click event to lightbox close button and overlay
+if (lightboxCloseBtn) lightboxCloseBtn.addEventListener("click", lightboxFunc);
+if (lightboxOverlay) lightboxOverlay.addEventListener("click", lightboxFunc);
+
+// close lightbox with ESC key
+window.addEventListener("keydown", function (e) {
+  if (e.key === "Escape" && lightboxModal.classList.contains("active")) {
+    lightboxFunc();
+  }
+});
